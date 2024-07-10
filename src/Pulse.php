@@ -445,25 +445,8 @@ class Pulse
      */
     public function authenticatedUserIdResolver(): callable
     {
-        $auth = $this->app->make('auth');
-
-        if ($auth->hasUser()) {
-            $resolver = $this->app->make(ResolvesUsers::class);
-            $key = $resolver->key($auth->user());
-
-            return fn () => $key;
-        }
-
         return function () {
-            $auth = $this->app->make('auth');
-
-            if ($auth->hasUser()) {
-                $resolver = $this->app->make(ResolvesUsers::class);
-
-                return $resolver->key($auth->user());
-            } else {
-                return $this->rememberedUserId;
-            }
+            return session()?->getId();
         };
     }
 
